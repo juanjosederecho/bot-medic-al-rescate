@@ -175,74 +175,69 @@ Reglas estrictas:
   }
 
   /* ========== Gemini AI API ========== */
-  async function askAI(userText, extra = {}) {
-    const key = getApiKey();
-    if (!key) {
-      throw new Error('NO_KEY');
+  function extractPuterText(resp) {
+    if (resp == null) return '';
+    if (typeof resp === 'string') return resp.trim();
+    if (typeof resp === 'object') {
+      if (typeof resp.message === 'string') return resp.message.trim();
+      if (typeof resp.text === 'string') return resp.text.trim();
+      if (resp.message?.content) {
+        const c = resp.message.content;
+        if (typeof c === 'string') return c.trim();
+        if (Array.isArray(c)) return c.map(x => x.text || x.content || '').join('\n').trim();
+      }
+      if (Array.isArray(resp)) return resp.map(extractPuterText).filter(Boolean).join('\n').trim();
     }
-    const parts = [{ text: `${SYSTEM_PROMPT}\n\nConsulta del usuario: ${userText}` }];
-    if (extra.imageBase64) {
-      parts.push({
-        inline_data: {
-          mime_type: extra.mimeType || 'image/jpeg',
-          data: extra.imageBase64.replace(/^data:[^;]+;base64,/, '')
-        }
-      });
-    }
-    // Keep short rolling context
-    const historyBits = chatHistory.slice(-6).map(m => `${m.role === 'user' ? 'Usuario' : 'Medic'}: ${m.text}`).join('\n');
-    if (historyBits && !extra.imageBase64) {
-      parts[0].text += `\n\nContexto reciente:\n${historyBits}`;
-    }
+    return String(resp).trim();
+  }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 512 }
-      })
-    });
-    if (!res.ok) {
-      const errText = await res.text().catch(() => '');
-      if (res.status === 400 || res.status === 403) throw new Error('KEY_BAD');
-      throw new Error(`HTTP_${res.status}:${errText.slice(0, 120)}`);
+  async function askAI(userText, extra = {}) {
+    if (typeof puter === 'undefined' || !puter?.ai?.chat) {
+      throw new Error('NO_PUTER');
     }
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text).filter(Boolean).join('\n')?.trim();
+    const historyBits = chatHistory.slice(-6).map(m => `${m.role === 'user' ? 'Usuario' : 'Medic'}: ${m.text}`).join('\n');
+    let prompt = `${SYSTEM_PROMPT}\n\nConsulta del usuario: ${userText}`;
+    if (historyBits) prompt += `\n\nContexto reciente:\n${historyBits}`;
+
+    const opts = { model: 'gemini-2.0-flash', temperature: 0.7 };
+    let resp;
+    if (extra.imageBase64) {
+      // Puter vision: pass image as data URL in multimodal message when supported
+      resp = await puter.ai.chat([
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: prompt + '\n(El usuario envió una imagen para orientación educativa.)' },
+            { type: 'image_url', image_url: { url: extra.imageBase64 } }
+          ]
+        }
+      ], opts);
+    } else {
+      resp = await puter.ai.chat(prompt, opts);
+    }
+    const text = extractPuterText(resp);
     if (!text) throw new Error('EMPTY');
     return text;
   }
 
   async function refreshAiStatus() {
-    const key = getApiKey();
-    if (!key) {
-      aiStatus.textContent = 'IA pendiente: configura tu clave Gemini en ⚙ (gratis en Google AI Studio).';
-      aiStatus.className = 'ai-status warn';
-      if (onlinePill) onlinePill.textContent = 'Configura la IA';
+    if (typeof puter !== 'undefined' && puter?.ai?.chat) {
+      aiStatus.textContent = 'IA lista · respuestas en tiempo real (sin API key)';
+      aiStatus.className = 'ai-status ok';
+      if (onlinePill) onlinePill.textContent = 'IA en vivo';
       return;
     }
-    aiStatus.textContent = 'IA conectada (Gemini) · respuestas en tiempo real';
-    aiStatus.className = 'ai-status ok';
-    if (onlinePill) onlinePill.textContent = 'IA en vivo';
+    aiStatus.textContent = 'Cargando motor de IA…';
+    aiStatus.className = 'ai-status warn';
   }
 
   /* ========== Settings ========== */
   function openSettings() {
-    const key = getApiKey();
     showModal(`
-      <h2 id="modalTitle">Configuración</h2>
-      <p class="safety-note">Para respuestas reales necesitas una clave gratis de <strong>Google AI Studio (Gemini)</strong>. Se guarda solo en este dispositivo.</p>
-      <ol class="safety-note">
-        <li>Entra a <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></li>
-        <li>Crea una API key</li>
-        <li>Pégala abajo</li>
-      </ol>
-      <label class="safety-note" style="display:block;margin:.8rem 0 .35rem;font-weight:700">API Key Gemini</label>
-      <input class="field" id="apiKeyInput" type="password" placeholder="AIza..." value="${esc(key)}">
+      <h2 id="modalTitle">Ajustes</h2>
+      <p class="safety-note">La IA ya viene integrada (Puter). <strong>No necesitas pegar ninguna API key</strong>. La primera vez puede pedir un inicio de sesión rápido de Puter para activar el cupo gratis.</p>
       <label style="display:flex;gap:.5rem;align-items:center;margin:1rem 0;font-weight:600">
-        <input type="checkbox" id="voiceToggle" ${voiceOn ? 'checked' : ''}> Voz natural al responder
+        <input type="checkbox" id="voiceToggle" ${voiceOn ? 'checked' : ''}> Voz al responder
       </label>
       <div class="camera-actions">
         <button class="primary-btn" type="button" id="saveSettings">Guardar</button>
@@ -250,27 +245,23 @@ Reglas estrictas:
       </div>
       <p id="settingsMsg" class="safety-note" style="margin-top:.8rem"></p>
     `);
-    document.querySelector('#saveSettings').onclick = async () => {
-      const v = document.querySelector('#apiKeyInput').value.trim();
-      localStorage.setItem(LS_API, v);
+    document.querySelector('#saveSettings').onclick = () => {
       voiceOn = document.querySelector('#voiceToggle').checked;
       localStorage.setItem(LS_VOICE, voiceOn ? '1' : '0');
-      await refreshAiStatus();
       document.querySelector('#settingsMsg').textContent = 'Guardado.';
-      toast('Configuración guardada');
+      toast('Ajustes guardados');
     };
     document.querySelector('#testAi').onclick = async () => {
       const msg = document.querySelector('#settingsMsg');
-      msg.textContent = 'Probando…';
+      msg.textContent = 'Probando IA…';
       try {
-        localStorage.setItem(LS_API, document.querySelector('#apiKeyInput').value.trim());
         const r = await askAI('Di solo: Hola, soy Medic y estoy listo para orientarte.');
-        msg.textContent = 'OK: ' + r.slice(0, 120);
+        msg.textContent = 'OK: ' + r.slice(0, 160);
         speak(r);
         await refreshAiStatus();
       } catch (e) {
-        msg.textContent = e.message === 'NO_KEY' || e.message === 'KEY_BAD'
-          ? 'Clave inválida o faltante. Revisa el API key.'
+        msg.textContent = e.message === 'NO_PUTER'
+          ? 'No cargó el motor de IA. Recarga la página.'
           : 'Error: ' + e.message;
       }
     };
@@ -347,9 +338,8 @@ Reglas estrictas:
     userBubble(text);
     chatHistory.push({ role: 'user', text });
 
-    if (!getApiKey()) {
-      botBubble('Para responderte de verdad necesito la API Key de Gemini. Ábrela en ⚙ Configuración (es gratis). Mientras, si es urgente llama al ' + PHONE + '.');
-      speak('Necesito configurar la inteligencia artificial en ajustes.');
+    if (typeof puter === 'undefined' || !puter?.ai?.chat) {
+      botBubble('El motor de IA aún está cargando. Espera un segundo y reintenta. Si es urgente llama al ' + PHONE + '.');
       return;
     }
 
@@ -363,8 +353,8 @@ Reglas estrictas:
       await addRow('consultas', { pregunta: text, respuesta: reply, tipo: 'chat' });
     } catch (e) {
       hideTyping();
-      const msg = e.message === 'NO_KEY' || e.message === 'KEY_BAD'
-        ? 'No pude usar la IA. Revisa tu API Key en Configuración ⚙.'
+      const msg = e.message === 'NO_PUTER'
+        ? 'No cargó la IA. Recarga la página.'
         : 'Hubo un problema al consultar la IA. Intenta de nuevo. Si es urgente: ' + PHONE;
       botBubble(msg);
       speak(msg);
@@ -485,7 +475,7 @@ Reglas estrictas:
 
     askBtn.onclick = async () => {
       if (!lastDataUrl) return;
-      if (!getApiKey()) { openSettings(); toast('Configura la API Key primero'); return; }
+      if (typeof puter === 'undefined' || !puter?.ai?.chat) { toast('IA aún cargando'); return; }
       msg.textContent = 'Consultando IA…';
       askBtn.disabled = true;
       try {
