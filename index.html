@@ -2,37 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b1f2a">
-  <meta name="description" content="Bot Medic al Rescate: orientación preventiva, primeros auxilios y bienestar. Prototipo educativo Colegio Rosas Pata.">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1520">
+  <meta name="description" content="Bot Medic al Rescate: orientación de salud con IA en tiempo real. Prototipo educativo Colegio Rosas Pata.">
   <title>Bot Medic al Rescate | Colegio Rosas Pata</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="images/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <a class="skip-link" href="#principal">Saltar al contenido</a>
+
   <header class="topbar">
     <div class="shell topbar-inner">
       <a class="brand" href="#inicio">
-        <img class="brand-logo" src="images/logo.png" alt="Logo Medic">
-        <span>
-          <strong>Medic</strong>
-          <small>al Rescate</small>
-        </span>
+        <img class="brand-logo" src="images/logo.png" alt="Logo Medic" width="48" height="48">
+        <span><strong>Medic</strong><small>al Rescate · IA</small></span>
       </a>
-      <nav class="desktop-nav" aria-label="Principal">
-        <a href="#funciones">Funciones</a>
-        <a href="#alternativa">Alternativa</a>
-        <a href="#emergencia">Emergencia</a>
-      </nav>
       <div class="header-actions">
-        <button class="icon-btn" id="themeBtn" type="button" aria-label="Modo oscuro">◐</button>
-        <button class="icon-btn" id="fontBtn" type="button" aria-label="Tamaño de letra">A+</button>
+        <button class="icon-btn" id="themeBtn" type="button" title="Modo oscuro" aria-label="Modo oscuro">◐</button>
+        <button class="icon-btn" id="settingsBtn" type="button" title="Configuración IA" aria-label="Configuración">⚙</button>
         <a class="emergency-btn" href="tel:900973658">Llamar</a>
       </div>
     </div>
@@ -42,127 +35,110 @@
     <section class="hero" id="inicio">
       <div class="shell hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow">✦ Tu salud, más cerca de ti</p>
-          <h1>Hola, soy <span>Medic</span>.<br>Estoy aquí para orientarte.</h1>
-          <p class="lead">Orientación preventiva, primeros auxilios, apoyo emocional y servicios cercanos. Habla por <strong>texto o audio</strong>.</p>
+          <p class="eyebrow">✦ Orientación con IA en tiempo real</p>
+          <h1>Hola, soy <span>Medic</span>.<br>Pregúntame de verdad.</h1>
+          <p class="lead">Respuestas generadas por inteligencia artificial según tu consulta. Habla por <strong>texto o voz</strong>, usa la <strong>cámara</strong> y guarda tu historial en la base de datos local.</p>
           <div class="hero-actions">
-            <button class="primary-btn" data-open="chat" type="button">💬 Conversar con Medic</button>
-            <a class="secondary-btn" href="#funciones">Explorar funciones</a>
+            <button class="primary-btn" id="openChatBtn" type="button">💬 Hablar con Medic</button>
+            <button class="secondary-btn" id="openCameraBtn" type="button">📷 Cámara</button>
           </div>
-          <p class="safety-note">Prototipo educativo. No diagnostica, no receta y no reemplaza la atención profesional.</p>
+          <p class="safety-note">Prototipo educativo. No diagnostica, no receta y no reemplaza atención profesional. En emergencia: <a href="tel:900973658">900 973 658</a> · SAMU 106.</p>
+          <p class="ai-status" id="aiStatus">Comprobando IA…</p>
         </div>
         <figure class="hero-art">
-          <img src="images/hero.jpg" alt="Profesional de salud atendiendo con calidez">
-          <figcaption class="online-pill">Medic está disponible</figcaption>
+          <img src="images/hero.jpg" alt="Atención de salud cercana y humana" width="800" height="550">
+          <figcaption class="online-pill" id="onlinePill">Medic listo</figcaption>
         </figure>
       </div>
     </section>
 
     <section class="quick-strip">
-      <div class="shell">
-        <h2 class="sr-only">Accesos directos</h2>
-        <div class="quick-grid">
-          <button type="button" data-open="chat"><img src="images/hero.jpg" alt=""><span>Síntomas</span></button>
-          <button type="button" data-open="firstAid"><img src="images/firstaid.jpg" alt=""><span>Primeros auxilios</span></button>
-          <button type="button" data-open="calm"><img src="images/wellness.jpg" alt=""><span>Bienestar</span></button>
-          <button type="button" data-open="emergency"><img src="images/emergency.jpg" alt=""><span>Emergencia</span></button>
-          <button type="button" data-open="camera"><img src="images/camera.jpg" alt=""><span>Cámara</span></button>
-          <button type="button" id="nearbyBtn"><img src="images/centro.jpg" alt=""><span>Centros</span></button>
-        </div>
+      <div class="shell quick-grid">
+        <button type="button" data-go="chat"><img src="images/hero.jpg" alt=""><span>Consulta IA</span></button>
+        <button type="button" data-go="firstAid"><img src="images/firstaid.jpg" alt=""><span>Primeros auxilios</span></button>
+        <button type="button" data-go="calm"><img src="images/wellness.jpg" alt=""><span>Bienestar</span></button>
+        <button type="button" data-go="urgent"><img src="images/emergency.jpg" alt=""><span>Emergencia</span></button>
+        <button type="button" data-go="camera"><img src="images/camera.jpg" alt=""><span>Cámara</span></button>
+        <button type="button" data-go="nearby"><img src="images/centro.jpg" alt=""><span>Centros</span></button>
       </div>
     </section>
 
     <section class="section shell" id="funciones">
       <div class="section-heading">
-        <p class="kicker">Central de ayuda</p>
+        <p class="kicker">Funciones</p>
         <h2>Todo lo que Medic puede hacer</h2>
       </div>
       <div class="feature-grid">
         <article class="feature-card">
           <img class="feature-photo" src="images/hero.jpg" alt="">
-          <h3>Orientador de síntomas</h3>
-          <p>Conversación guiada con preguntas de refinamiento. Señales de alerta, sin diagnósticos.</p>
-          <button class="text-btn" data-open="chat" type="button">Iniciar orientación →</button>
+          <h3>Consulta con IA</h3>
+          <p>Respuestas reales en tiempo real según lo que preguntas (Gemini).</p>
+          <button class="text-btn" type="button" data-go="chat">Abrir chat →</button>
         </article>
         <article class="feature-card">
           <img class="feature-photo" src="images/firstaid.jpg" alt="">
           <h3>Primeros auxilios</h3>
-          <p>Guías para quemaduras, sangrado, atragantamiento, desmayo y lesiones leves.</p>
-          <button class="text-btn" data-open="firstAid" type="button">Ver guías →</button>
+          <p>Guías rápidas + opción de preguntar a la IA con más detalle.</p>
+          <button class="text-btn" type="button" data-go="firstAid">Ver guías →</button>
         </article>
         <article class="feature-card">
           <img class="feature-photo" src="images/wellness.jpg" alt="">
-          <h3>Bienestar emocional</h3>
-          <p>Respiración guiada y pausa consciente. Línea 113 opción 5 si necesitas más apoyo.</p>
-          <button class="text-btn" data-open="calm" type="button">Respirar con Medic →</button>
-        </article>
-        <article class="feature-card">
-          <img class="feature-photo" src="images/centro.jpg" alt="">
-          <h3>Mapa de salud</h3>
-          <p>Centros, hospitales y farmacias cerca de ti con la ubicación del dispositivo.</p>
-          <button class="text-btn" id="nearbyBtn2" type="button">Buscar cerca →</button>
+          <h3>Bienestar</h3>
+          <p>Respiración guiada con voz natural y apoyo emocional.</p>
+          <button class="text-btn" type="button" data-go="calm">Empezar →</button>
         </article>
         <article class="feature-card">
           <img class="feature-photo" src="images/camera.jpg" alt="">
-          <h3>Cámara guía</h3>
-          <p>Identifica productos o lesiones con la cámara. Solo orientación educativa.</p>
-          <button class="text-btn" data-open="camera" type="button">Abrir cámara →</button>
+          <h3>Cámara</h3>
+          <p>Enciende la cámara o sube foto; la IA comenta de forma educativa.</p>
+          <button class="text-btn" type="button" data-go="camera">Abrir cámara →</button>
+        </article>
+        <article class="feature-card">
+          <img class="feature-photo" src="images/alternativa.jpg" alt="">
+          <h3>Medicina alternativa</h3>
+          <p>Orientación cultural con IA y advertencias claras.</p>
+          <button class="text-btn" type="button" data-go="alt">Explorar →</button>
         </article>
         <article class="feature-card">
           <img class="feature-photo" src="images/emergency.jpg" alt="">
-          <h3>Consultas urgentes</h3>
-          <p>Eventos, accidentes o emergencias no previstas: acceso rápido a ayuda.</p>
-          <button class="text-btn" data-open="urgentBox" type="button">Abrir casilla →</button>
+          <h3>Historial y datos</h3>
+          <p>Base de datos local: consultas, contactos y exportación.</p>
+          <button class="text-btn" type="button" data-go="history">Ver historial →</button>
         </article>
-      </div>
-    </section>
-
-    <section class="section shell alt-section" id="alternativa">
-      <div class="alt-grid">
-        <img src="images/alternativa.jpg" alt="Remedios naturales: menta, manzanilla, limón y miel">
-        <div>
-          <p class="kicker">Bienestar complementario</p>
-          <h2>Medicina alternativa (orientación)</h2>
-          <p>Tips generales de hábitos y remedios tradicionales suaves. <strong>No reemplazan</strong> consulta médica ni medicamentos indicados por un profesional.</p>
-          <button class="primary-btn" data-open="alternativa" type="button">Ver sugerencias</button>
-        </div>
       </div>
     </section>
 
     <section class="section shell" id="emergencia">
       <div class="section-heading">
-        <p class="kicker">Centro de emergencia</p>
+        <p class="kicker">Emergencia</p>
         <h2>Contactos rápidos</h2>
       </div>
       <div class="emergency-grid">
-        <a class="em-card hot" href="tel:900973658">
-          <img src="images/emergency.jpg" alt="">
-          <div><strong>Contacto prioritario</strong><span>900 973 658</span></div>
-        </a>
+        <a class="em-card hot" href="tel:900973658"><img src="images/emergency.jpg" alt=""><div><strong>Prioritario</strong><span>900 973 658</span></div></a>
         <a class="em-card" href="tel:106"><strong>SAMU</strong><span>106</span></a>
         <a class="em-card" href="tel:105"><strong>Policía</strong><span>105</span></a>
         <a class="em-card" href="tel:116"><strong>Bomberos</strong><span>116</span></a>
       </div>
-      <div class="contacts-box" id="personalContacts">
-        <h3>Tus 2 contactos personales</h3>
-        <p>Se guardan solo en este dispositivo.</p>
+      <div class="contacts-box">
+        <h3>2 contactos personales</h3>
         <form id="contactsForm" class="contacts-form">
-          <label>Contacto 1 <input name="n1" placeholder="Nombre" required> <input name="p1" placeholder="Teléfono" required></label>
-          <label>Contacto 2 <input name="n2" placeholder="Nombre" required> <input name="p2" placeholder="Teléfono" required></label>
-          <button class="primary-btn" type="submit">Guardar contactos</button>
+          <label>1 <input name="n1" placeholder="Nombre" required> <input name="p1" type="tel" placeholder="Teléfono" required></label>
+          <label>2 <input name="n2" placeholder="Nombre" required> <input name="p2" type="tel" placeholder="Teléfono" required></label>
+          <button class="primary-btn" type="submit">Guardar en base de datos</button>
         </form>
         <div id="contactsList" class="contacts-list"></div>
       </div>
     </section>
 
     <section class="section shell project">
-      <p class="kicker">Crea y Emprende 2026</p>
-      <h2>Una solución creada desde el aula</h2>
-      <p>Proyecto educativo del Colegio Rosas Pata — Promoción Quinto A. Combina tecnología, prevención y servicio a la comunidad.</p>
+      <p class="kicker">Crea y Emprende 2026 · Colegio Rosas Pata</p>
+      <h2>Prototipo educativo con IA + base de datos</h2>
+      <p>Quinto A · Respuestas por API de IA · Historial en IndexedDB en este dispositivo.</p>
     </section>
   </main>
 
-  <div class="toast" id="toast" role="status"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <div class="modal" id="modal" aria-hidden="true">
     <div class="modal-backdrop" data-close></div>
     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -170,6 +146,7 @@
       <div id="modalContent"></div>
     </div>
   </div>
+
   <script src="app.js" defer></script>
 </body>
 </html>
