@@ -3,30 +3,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#087f8c">
-  <meta name="description" content="Bot Medic al Rescate: prototipo educativo de orientación preventiva creado por Quinto A del Colegio Rosas Pata.">
+  <meta name="theme-color" content="#0b1f2a">
+  <meta name="description" content="Bot Medic al Rescate: orientación preventiva, primeros auxilios y bienestar. Prototipo educativo Colegio Rosas Pata.">
   <title>Bot Medic al Rescate | Colegio Rosas Pata</title>
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="images/logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <a class="skip-link" href="#principal">Saltar al contenido</a>
   <header class="topbar">
     <div class="shell topbar-inner">
-      <a class="brand" href="#inicio" aria-label="Ir al inicio">
-        <span class="brand-mark" aria-hidden="true">🤖</span>
-        <span><strong>Bot Medic</strong><small>al Rescate</small></span>
+      <a class="brand" href="#inicio">
+        <img class="brand-logo" src="images/logo.png" alt="Logo Medic">
+        <span>
+          <strong>Medic</strong>
+          <small>al Rescate</small>
+        </span>
       </a>
-      <nav class="desktop-nav" aria-label="Navegación principal">
-        <a href="#funciones">Funciones</a><a href="#bienestar">Bienestar</a><a href="#proyecto">Proyecto</a>
+      <nav class="desktop-nav" aria-label="Principal">
+        <a href="#funciones">Funciones</a>
+        <a href="#alternativa">Alternativa</a>
+        <a href="#emergencia">Emergencia</a>
       </nav>
       <div class="header-actions">
-        <button class="icon-btn" id="fontBtn" title="Aumentar tamaño de letra" aria-label="Aumentar tamaño de letra">A+</button>
-        <button class="icon-btn" id="contrastBtn" title="Activar alto contraste" aria-label="Activar alto contraste">◐</button>
-        <button class="emergency-btn" data-open="emergency"><span aria-hidden="true">☎</span> Emergencia</button>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Modo oscuro">◐</button>
+        <button class="icon-btn" id="fontBtn" type="button" aria-label="Tamaño de letra">A+</button>
+        <a class="emergency-btn" href="tel:900973658">Llamar</a>
       </div>
     </div>
   </header>
@@ -35,79 +42,134 @@
     <section class="hero" id="inicio">
       <div class="shell hero-grid">
         <div class="hero-copy">
-          <span class="eyebrow">✦ Tu salud, más cerca de ti</span>
-          <h1>Hola, soy Medic.<br><span>Estoy aquí para orientarte.</span></h1>
-          <p>Orientación preventiva, primeros auxilios, apoyo emocional y servicios de salud en una experiencia clara y amigable.</p>
+          <p class="eyebrow">✦ Tu salud, más cerca de ti</p>
+          <h1>Hola, soy <span>Medic</span>.<br>Estoy aquí para orientarte.</h1>
+          <p class="lead">Orientación preventiva, primeros auxilios, apoyo emocional y servicios cercanos. Habla por <strong>texto o audio</strong>.</p>
           <div class="hero-actions">
-            <button class="primary-btn" data-open="chat">💬 Conversar con Medic</button>
+            <button class="primary-btn" data-open="chat" type="button">💬 Conversar con Medic</button>
             <a class="secondary-btn" href="#funciones">Explorar funciones</a>
           </div>
-          <div class="safety-note"><span aria-hidden="true">🛡️</span><span>Prototipo educativo. No diagnostica, no receta y no reemplaza la atención profesional.</span></div>
+          <p class="safety-note">Prototipo educativo. No diagnostica, no receta y no reemplaza la atención profesional.</p>
         </div>
-        <div class="hero-art">
-          <img src="bot-medic-hero.png" alt="Robot asistente de salud acompañando a un estudiante peruano">
-          <div class="online-pill"><span></span> Medic está disponible</div>
-        </div>
+        <figure class="hero-art">
+          <img src="images/hero.jpg" alt="Profesional de salud atendiendo con calidez">
+          <figcaption class="online-pill">Medic está disponible</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section class="quick-strip" aria-label="Accesos inmediatos">
-      <div class="shell quick-grid">
-        <button data-open="chat"><span>🩺</span><strong>Síntomas</strong><small>Orientación segura</small></button>
-        <button data-open="firstAid"><span>🩹</span><strong>Primeros auxilios</strong><small>Guías paso a paso</small></button>
-        <button data-open="calm"><span>🫧</span><strong>Apoyo emocional</strong><small>Vuelve a la calma</small></button>
-        <button id="nearbyBtn"><span>📍</span><strong>Centros cercanos</strong><small>Usar mi ubicación</small></button>
+    <section class="quick-strip">
+      <div class="shell">
+        <h2 class="sr-only">Accesos directos</h2>
+        <div class="quick-grid">
+          <button type="button" data-open="chat"><img src="images/hero.jpg" alt=""><span>Síntomas</span></button>
+          <button type="button" data-open="firstAid"><img src="images/firstaid.jpg" alt=""><span>Primeros auxilios</span></button>
+          <button type="button" data-open="calm"><img src="images/wellness.jpg" alt=""><span>Bienestar</span></button>
+          <button type="button" data-open="emergency"><img src="images/emergency.jpg" alt=""><span>Emergencia</span></button>
+          <button type="button" data-open="camera"><img src="images/camera.jpg" alt=""><span>Cámara</span></button>
+          <button type="button" id="nearbyBtn"><img src="images/centro.jpg" alt=""><span>Centros</span></button>
+        </div>
       </div>
     </section>
 
     <section class="section shell" id="funciones">
       <div class="section-heading">
-        <div><span class="kicker">CENTRAL DE AYUDA</span><h2>Todo lo que Medic puede hacer</h2></div>
-        <p>Funciones diseñadas para una respuesta rápida, accesible y responsable.</p>
+        <p class="kicker">Central de ayuda</p>
+        <h2>Todo lo que Medic puede hacer</h2>
       </div>
       <div class="feature-grid">
-        <article class="feature-card aqua"><div class="feature-icon">🩺</div><h3>Orientador de síntomas</h3><p>Conversación guiada que identifica señales de alerta y sugiere el siguiente paso sin emitir diagnósticos.</p><button data-open="chat">Iniciar orientación →</button></article>
-        <article class="feature-card green"><div class="feature-icon">🩹</div><h3>Primeros auxilios</h3><p>Guías visuales para quemaduras, sangrado, atragantamiento, desmayo y lesiones leves.</p><button data-open="firstAid">Ver guías →</button></article>
-        <article class="feature-card violet"><div class="feature-icon">🫧</div><h3>Bienestar emocional</h3><p>Respiración guiada, pausa consciente y acceso rápido a orientación profesional.</p><button data-open="calm">Respirar con Medic →</button></article>
-        <article class="feature-card amber"><div class="feature-icon">📍</div><h3>Mapa de salud</h3><p>Busca centros de salud, hospitales, farmacias y boticas utilizando la ubicación del dispositivo.</p><button id="mapCardBtn">Buscar cerca →</button></article>
-        <article class="feature-card coral"><div class="feature-icon">📞</div><h3>Centro de emergencia</h3><p>Acceso directo a SAMU, Policía, Bomberos y contactos personales guardados.</p><button data-open="emergency">Abrir emergencia →</button></article>
-        <article class="feature-card blue"><div class="feature-icon">👤</div><h3>Ficha preventiva</h3><p>Guarda en este dispositivo alergias, contacto de emergencia y datos básicos de forma voluntaria.</p><button data-open="profile">Completar ficha →</button></article>
-        <article class="feature-card pink"><div class="feature-icon">🔔</div><h3>Recordatorios</h3><p>Agenda citas, hidratación o medicamentos previamente indicados por un profesional.</p><button data-open="reminders">Crear recordatorio →</button></article>
-        <article class="feature-card slate"><div class="feature-icon">🗂️</div><h3>Historial y datos</h3><p>Consulta interacciones guardadas, exporta una copia y controla los datos del prototipo.</p><button data-open="data">Ver mis datos →</button></article>
+        <article class="feature-card">
+          <img class="feature-photo" src="images/hero.jpg" alt="">
+          <h3>Orientador de síntomas</h3>
+          <p>Conversación guiada con preguntas de refinamiento. Señales de alerta, sin diagnósticos.</p>
+          <button class="text-btn" data-open="chat" type="button">Iniciar orientación →</button>
+        </article>
+        <article class="feature-card">
+          <img class="feature-photo" src="images/firstaid.jpg" alt="">
+          <h3>Primeros auxilios</h3>
+          <p>Guías para quemaduras, sangrado, atragantamiento, desmayo y lesiones leves.</p>
+          <button class="text-btn" data-open="firstAid" type="button">Ver guías →</button>
+        </article>
+        <article class="feature-card">
+          <img class="feature-photo" src="images/wellness.jpg" alt="">
+          <h3>Bienestar emocional</h3>
+          <p>Respiración guiada y pausa consciente. Línea 113 opción 5 si necesitas más apoyo.</p>
+          <button class="text-btn" data-open="calm" type="button">Respirar con Medic →</button>
+        </article>
+        <article class="feature-card">
+          <img class="feature-photo" src="images/centro.jpg" alt="">
+          <h3>Mapa de salud</h3>
+          <p>Centros, hospitales y farmacias cerca de ti con la ubicación del dispositivo.</p>
+          <button class="text-btn" id="nearbyBtn2" type="button">Buscar cerca →</button>
+        </article>
+        <article class="feature-card">
+          <img class="feature-photo" src="images/camera.jpg" alt="">
+          <h3>Cámara guía</h3>
+          <p>Identifica productos o lesiones con la cámara. Solo orientación educativa.</p>
+          <button class="text-btn" data-open="camera" type="button">Abrir cámara →</button>
+        </article>
+        <article class="feature-card">
+          <img class="feature-photo" src="images/emergency.jpg" alt="">
+          <h3>Consultas urgentes</h3>
+          <p>Eventos, accidentes o emergencias no previstas: acceso rápido a ayuda.</p>
+          <button class="text-btn" data-open="urgentBox" type="button">Abrir casilla →</button>
+        </article>
       </div>
     </section>
 
-    <section class="wellbeing" id="bienestar">
-      <div class="shell wellbeing-grid">
-        <div class="breathing-preview" aria-hidden="true"><div class="breath-orbit"><span>🤖</span></div><small>Inhala · Sostén · Exhala</small></div>
-        <div><span class="kicker light">PAUSA SALUDABLE</span><h2>Un minuto también puede ayudarte</h2><p>Medic incluye ejercicios sencillos de respiración y conexión con el entorno para momentos de estrés. Si necesitas apoyo, también te conecta con la Línea 113, opción 5.</p><button class="light-btn" data-open="calm">Comenzar ejercicio de 1 minuto</button></div>
+    <section class="section shell alt-section" id="alternativa">
+      <div class="alt-grid">
+        <img src="images/alternativa.jpg" alt="Remedios naturales: menta, manzanilla, limón y miel">
+        <div>
+          <p class="kicker">Bienestar complementario</p>
+          <h2>Medicina alternativa (orientación)</h2>
+          <p>Tips generales de hábitos y remedios tradicionales suaves. <strong>No reemplazan</strong> consulta médica ni medicamentos indicados por un profesional.</p>
+          <button class="primary-btn" data-open="alternativa" type="button">Ver sugerencias</button>
+        </div>
       </div>
     </section>
 
-    <section class="section shell" id="proyecto">
-      <div class="project-card">
-        <div><span class="project-badge">CREA Y EMPRENDE 2026</span><h2>Una solución creada desde el aula</h2><p>Bot Medic al Rescate es un proyecto educativo que combina tecnología, prevención y servicio a la comunidad. Su prototipo busca validar una experiencia accesible con usuarios reales.</p><div class="project-tags"><span>Design Thinking</span><span>Innovación social</span><span>Impacto medible</span><span>Tecnología responsable</span></div></div>
-        <div class="school-seal"><span>RP</span><strong>Colegio<br>Rosas Pata</strong><small>Promoción Quinto A</small></div>
+    <section class="section shell" id="emergencia">
+      <div class="section-heading">
+        <p class="kicker">Centro de emergencia</p>
+        <h2>Contactos rápidos</h2>
+      </div>
+      <div class="emergency-grid">
+        <a class="em-card hot" href="tel:900973658">
+          <img src="images/emergency.jpg" alt="">
+          <div><strong>Contacto prioritario</strong><span>900 973 658</span></div>
+        </a>
+        <a class="em-card" href="tel:106"><strong>SAMU</strong><span>106</span></a>
+        <a class="em-card" href="tel:105"><strong>Policía</strong><span>105</span></a>
+        <a class="em-card" href="tel:116"><strong>Bomberos</strong><span>116</span></a>
+      </div>
+      <div class="contacts-box" id="personalContacts">
+        <h3>Tus 2 contactos personales</h3>
+        <p>Se guardan solo en este dispositivo.</p>
+        <form id="contactsForm" class="contacts-form">
+          <label>Contacto 1 <input name="n1" placeholder="Nombre" required> <input name="p1" placeholder="Teléfono" required></label>
+          <label>Contacto 2 <input name="n2" placeholder="Nombre" required> <input name="p2" placeholder="Teléfono" required></label>
+          <button class="primary-btn" type="submit">Guardar contactos</button>
+        </form>
+        <div id="contactsList" class="contacts-list"></div>
       </div>
     </section>
 
-    <section class="section shell feedback-section">
-      <div><span class="kicker">AYÚDANOS A MEJORAR</span><h2>¿Qué te pareció el prototipo?</h2><p>Tu opinión se guarda en la base de datos local y ayuda al equipo a validar su propuesta.</p></div>
-      <form id="feedbackForm" class="feedback-form">
-        <fieldset><legend>Calificación</legend><div class="rating"><input id="r5" name="rating" type="radio" value="5" required><label for="r5">5</label><input id="r4" name="rating" type="radio" value="4"><label for="r4">4</label><input id="r3" name="rating" type="radio" value="3"><label for="r3">3</label><input id="r2" name="rating" type="radio" value="2"><label for="r2">2</label><input id="r1" name="rating" type="radio" value="1"><label for="r1">1</label></div></fieldset>
-        <label>Comentario<textarea name="comment" rows="3" placeholder="Escribe una sugerencia..."></textarea></label>
-        <button class="primary-btn" type="submit">Enviar opinión</button>
-      </form>
+    <section class="section shell project">
+      <p class="kicker">Crea y Emprende 2026</p>
+      <h2>Una solución creada desde el aula</h2>
+      <p>Proyecto educativo del Colegio Rosas Pata — Promoción Quinto A. Combina tecnología, prevención y servicio a la comunidad.</p>
     </section>
   </main>
 
-  <footer><div class="shell footer-grid"><div class="brand footer-brand"><span class="brand-mark">🤖</span><span><strong>Bot Medic</strong><small>al Rescate</small></span></div><p>Proyecto educativo · Colegio Rosas Pata<br>Promoción Quinto A · Crea y Emprende 2026</p><p class="footer-note">La información es educativa y preventiva.<br>Ante una emergencia real, solicita ayuda profesional.</p></div></footer>
-
-  <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="toast" id="toast" role="status"></div>
+  <div class="modal" id="modal" aria-hidden="true">
     <div class="modal-backdrop" data-close></div>
-    <div class="modal-card"><button class="close-btn" data-close aria-label="Cerrar">×</button><div id="modalContent"></div></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" type="button" data-close aria-label="Cerrar">×</button>
+      <div id="modalContent"></div>
+    </div>
   </div>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

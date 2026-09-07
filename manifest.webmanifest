@@ -1,1 +1,9 @@
-{"name":"Bot Medic al Rescate","short_name":"Bot Medic","description":"Prototipo educativo del Colegio Rosas Pata, Promoción Quinto A","start_url":"./","display":"standalone","background_color":"#f4fbfc","theme_color":"#087f8c","lang":"es"}
+{
+  "name": "Bot Medic al Rescate",
+  "short_name": "Medic",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0b1520",
+  "theme_color": "#0a7f8c",
+  "icons": [{"src":"images/logo.png","sizes":"512x512","type":"image/png"}]
+}
