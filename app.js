@@ -3,7 +3,6 @@
 
   const PHONE = '900973658';
   const LS_THEME = 'medicTheme';
-  const LS_API = 'medicGeminiKey';
   const LS_VOICE = 'medicVoiceOn';
   const DB_NAME = 'MedicAlRescateDB';
   const DB_VER = 2;
@@ -39,9 +38,6 @@ Reglas estrictas:
   }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  }
-  function getApiKey() {
-    return (localStorage.getItem(LS_API) || '').trim();
   }
 
   /* ========== Theme ========== */
@@ -175,67 +171,69 @@ Reglas estrictas:
   }
 
   /* ========== Gemini AI API ========== */
-  function extractPuterText(resp) {
-    if (resp == null) return '';
-    if (typeof resp === 'string') return resp.trim();
-    if (typeof resp === 'object') {
-      if (typeof resp.message === 'string') return resp.message.trim();
-      if (typeof resp.text === 'string') return resp.text.trim();
-      if (resp.message?.content) {
-        const c = resp.message.content;
-        if (typeof c === 'string') return c.trim();
-        if (Array.isArray(c)) return c.map(x => x.text || x.content || '').join('\n').trim();
-      }
-      if (Array.isArray(resp)) return resp.map(extractPuterText).filter(Boolean).join('\n').trim();
+  const AI_ENDPOINT = (location.hostname.endsWith('here.now') || location.hostname === 'localhost')
+    ? '/api/gemini'
+    : 'https://stormy-dune-65a3.here.now/api/gemini';
+
+  function dataUrlToInline(dataUrl) {
+    const m = String(dataUrl).match(/^data:([^;]+);base64,(.+)$/);
+    if (!m) return null;
+    return { mime_type: m[1], data: m[2] };
+  }
+
+  function extractGeminiText(data) {
+    try {
+      const parts = data?.candidates?.[0]?.content?.parts || [];
+      return parts.map(p => p.text || '').join('\n').trim();
+    } catch {
+      return '';
     }
-    return String(resp).trim();
   }
 
   async function askAI(userText, extra = {}) {
-    if (typeof puter === 'undefined' || !puter?.ai?.chat) {
-      throw new Error('NO_PUTER');
-    }
     const historyBits = chatHistory.slice(-6).map(m => `${m.role === 'user' ? 'Usuario' : 'Medic'}: ${m.text}`).join('\n');
-    let prompt = `${SYSTEM_PROMPT}\n\nConsulta del usuario: ${userText}`;
+    let prompt = `Consulta del usuario: ${userText}`;
     if (historyBits) prompt += `\n\nContexto reciente:\n${historyBits}`;
+    if (extra.imageBase64) prompt += '\n(El usuario envió una imagen para orientación educativa.)';
 
-    const opts = { model: 'gemini-2.0-flash', temperature: 0.7 };
-    let resp;
+    const parts = [{ text: prompt }];
     if (extra.imageBase64) {
-      // Puter vision: pass image as data URL in multimodal message when supported
-      resp = await puter.ai.chat([
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: prompt + '\n(El usuario envió una imagen para orientación educativa.)' },
-            { type: 'image_url', image_url: { url: extra.imageBase64 } }
-          ]
-        }
-      ], opts);
-    } else {
-      resp = await puter.ai.chat(prompt, opts);
+      const inline = dataUrlToInline(extra.imageBase64);
+      if (inline) parts.push({ inline_data: inline });
     }
-    const text = extractPuterText(resp);
+
+    const body = {
+      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents: [{ role: 'user', parts }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 512 }
+    };
+
+    const resp = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!resp.ok) {
+      const errText = await resp.text().catch(() => '');
+      throw new Error(resp.status === 429 ? 'RATE' : ('HTTP_' + resp.status + (errText ? '' : '')));
+    }
+    const data = await resp.json();
+    const text = extractGeminiText(data);
     if (!text) throw new Error('EMPTY');
     return text;
   }
 
   async function refreshAiStatus() {
-    if (typeof puter !== 'undefined' && puter?.ai?.chat) {
-      aiStatus.textContent = 'IA lista · respuestas en tiempo real (sin API key)';
-      aiStatus.className = 'ai-status ok';
-      if (onlinePill) onlinePill.textContent = 'IA en vivo';
-      return;
-    }
-    aiStatus.textContent = 'Cargando motor de IA…';
-    aiStatus.className = 'ai-status warn';
+    aiStatus.textContent = 'IA lista · Gemini (sin login)';
+    aiStatus.className = 'ai-status ok';
+    if (onlinePill) onlinePill.textContent = 'IA en vivo';
   }
 
-  /* ========== Settings ========== */
+  /* ========== Settings ========== */  /* ========== Settings ========== */
   function openSettings() {
     showModal(`
       <h2 id="modalTitle">Ajustes</h2>
-      <p class="safety-note">La IA ya viene integrada (Puter). <strong>No necesitas pegar ninguna API key</strong>. La primera vez puede pedir un inicio de sesión rápido de Puter para activar el cupo gratis.</p>
+      <p class="safety-note">La IA usa Gemini por un proxy seguro. <strong>No pide login ni API key</strong>.</p>
       <label style="display:flex;gap:.5rem;align-items:center;margin:1rem 0;font-weight:600">
         <input type="checkbox" id="voiceToggle" ${voiceOn ? 'checked' : ''}> Voz al responder
       </label>
@@ -260,8 +258,8 @@ Reglas estrictas:
         speak(r);
         await refreshAiStatus();
       } catch (e) {
-        msg.textContent = e.message === 'NO_PUTER'
-          ? 'No cargó el motor de IA. Recarga la página.'
+        msg.textContent = e.message === 'RATE'
+          ? 'Demasiadas consultas. Espera un minuto.'
           : 'Error: ' + e.message;
       }
     };
@@ -338,11 +336,6 @@ Reglas estrictas:
     userBubble(text);
     chatHistory.push({ role: 'user', text });
 
-    if (typeof puter === 'undefined' || !puter?.ai?.chat) {
-      botBubble('El motor de IA aún está cargando. Espera un segundo y reintenta. Si es urgente llama al ' + PHONE + '.');
-      return;
-    }
-
     showTyping();
     try {
       const reply = await askAI(text);
@@ -353,8 +346,8 @@ Reglas estrictas:
       await addRow('consultas', { pregunta: text, respuesta: reply, tipo: 'chat' });
     } catch (e) {
       hideTyping();
-      const msg = e.message === 'NO_PUTER'
-        ? 'No cargó la IA. Recarga la página.'
+      const msg = e.message === 'RATE'
+        ? 'Demasiadas consultas. Espera un minuto e intenta de nuevo.'
         : 'Hubo un problema al consultar la IA. Intenta de nuevo. Si es urgente: ' + PHONE;
       botBubble(msg);
       speak(msg);
@@ -475,7 +468,6 @@ Reglas estrictas:
 
     askBtn.onclick = async () => {
       if (!lastDataUrl) return;
-      if (typeof puter === 'undefined' || !puter?.ai?.chat) { toast('IA aún cargando'); return; }
       msg.textContent = 'Consultando IA…';
       askBtn.disabled = true;
       try {
@@ -488,7 +480,7 @@ Reglas estrictas:
         await addRow('fotos', { nota: reply, preview: lastDataUrl.slice(0, 80) + '…' });
         await addRow('consultas', { pregunta: '[imagen]', respuesta: reply, tipo: 'camera' });
       } catch (e) {
-        msg.textContent = 'No pude analizar la imagen. Revisa la API Key o intenta otra foto.';
+        msg.textContent = 'No pude analizar la imagen. Intenta otra foto o recarga la página.';
       }
       askBtn.disabled = false;
     };

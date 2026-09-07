@@ -1,4 +1,4 @@
-const CACHE = 'medic-v4';
+const CACHE = 'medic-v9';
 const ASSETS = ['./','./index.html','./styles.css','./app.js','./manifest.webmanifest','./images/logo.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));

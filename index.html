@@ -1,153 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b1520">
-  <meta name="description" content="Bot Medic al Rescate: orientación de salud con IA en tiempo real. Prototipo educativo Colegio Rosas Pata.">
-  <title>Bot Medic al Rescate | Colegio Rosas Pata</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="images/logo.png" type="image/png">
-  <link rel="apple-touch-icon" href="images/logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta http-equiv="refresh" content="0; url=https://stormy-dune-65a3.here.now/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bot Medic al Rescate</title>
+  <link rel="canonical" href="https://stormy-dune-65a3.here.now/" />
+  <style>
+    body{font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#0a7f8c;color:#fff}
+    a{color:#fff;font-weight:700}
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#principal">Saltar al contenido</a>
-
-  <header class="topbar">
-    <div class="shell topbar-inner">
-      <a class="brand" href="#inicio">
-        <img class="brand-logo" src="images/logo.png" alt="Logo Medic" width="48" height="48">
-        <span><strong>Medic</strong><small>al Rescate · IA</small></span>
-      </a>
-      <div class="header-actions">
-        <button class="icon-btn" id="themeBtn" type="button" title="Modo oscuro" aria-label="Modo oscuro">◐</button>
-        <button class="icon-btn" id="settingsBtn" type="button" title="Ajustes" aria-label="Ajustes">⚙</button>
-        <a class="emergency-btn" href="tel:900973658">Llamar</a>
-      </div>
-    </div>
-  </header>
-
-  <main id="principal">
-    <section class="hero" id="inicio">
-      <div class="shell hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">✦ Orientación con IA en tiempo real</p>
-          <h1>Hola, soy <span>Medic</span>.<br>Pregúntame de verdad.</h1>
-          <p class="lead">Respuestas generadas por inteligencia artificial según tu consulta. Habla por <strong>texto o voz</strong>, usa la <strong>cámara</strong> y guarda tu historial en la base de datos local.</p>
-          <div class="hero-actions">
-            <button class="primary-btn" id="openChatBtn" type="button">💬 Hablar con Medic</button>
-            <button class="secondary-btn" id="openCameraBtn" type="button">📷 Cámara</button>
-          </div>
-          <p class="safety-note">Prototipo educativo. No diagnostica, no receta y no reemplaza atención profesional. En emergencia: <a href="tel:900973658">900 973 658</a> · SAMU 106.</p>
-          <p class="ai-status" id="aiStatus">Comprobando IA…</p>
-        </div>
-        <figure class="hero-art">
-          <img src="images/hero.jpg" alt="Atención de salud cercana y humana" width="800" height="550">
-          <figcaption class="online-pill" id="onlinePill">Medic listo</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="quick-strip">
-      <div class="shell quick-grid">
-        <button type="button" data-go="chat"><img src="images/hero.jpg" alt=""><span>Consulta IA</span></button>
-        <button type="button" data-go="firstAid"><img src="images/firstaid.jpg" alt=""><span>Primeros auxilios</span></button>
-        <button type="button" data-go="calm"><img src="images/wellness.jpg" alt=""><span>Bienestar</span></button>
-        <button type="button" data-go="urgent"><img src="images/emergency.jpg" alt=""><span>Emergencia</span></button>
-        <button type="button" data-go="camera"><img src="images/camera.jpg" alt=""><span>Cámara</span></button>
-        <button type="button" data-go="nearby"><img src="images/centro.jpg" alt=""><span>Centros</span></button>
-      </div>
-    </section>
-
-    <section class="section shell" id="funciones">
-      <div class="section-heading">
-        <p class="kicker">Funciones</p>
-        <h2>Todo lo que Medic puede hacer</h2>
-      </div>
-      <div class="feature-grid">
-        <article class="feature-card">
-          <img class="feature-photo" src="images/hero.jpg" alt="">
-          <h3>Consulta con IA</h3>
-          <p>Respuestas reales en tiempo real según lo que preguntas (Gemini).</p>
-          <button class="text-btn" type="button" data-go="chat">Abrir chat →</button>
-        </article>
-        <article class="feature-card">
-          <img class="feature-photo" src="images/firstaid.jpg" alt="">
-          <h3>Primeros auxilios</h3>
-          <p>Guías rápidas + opción de preguntar a la IA con más detalle.</p>
-          <button class="text-btn" type="button" data-go="firstAid">Ver guías →</button>
-        </article>
-        <article class="feature-card">
-          <img class="feature-photo" src="images/wellness.jpg" alt="">
-          <h3>Bienestar</h3>
-          <p>Respiración guiada con voz natural y apoyo emocional.</p>
-          <button class="text-btn" type="button" data-go="calm">Empezar →</button>
-        </article>
-        <article class="feature-card">
-          <img class="feature-photo" src="images/camera.jpg" alt="">
-          <h3>Cámara</h3>
-          <p>Enciende la cámara o sube foto; la IA comenta de forma educativa.</p>
-          <button class="text-btn" type="button" data-go="camera">Abrir cámara →</button>
-        </article>
-        <article class="feature-card">
-          <img class="feature-photo" src="images/alternativa.jpg" alt="">
-          <h3>Medicina alternativa</h3>
-          <p>Orientación cultural con IA y advertencias claras.</p>
-          <button class="text-btn" type="button" data-go="alt">Explorar →</button>
-        </article>
-        <article class="feature-card">
-          <img class="feature-photo" src="images/emergency.jpg" alt="">
-          <h3>Historial y datos</h3>
-          <p>Base de datos local: consultas, contactos y exportación.</p>
-          <button class="text-btn" type="button" data-go="history">Ver historial →</button>
-        </article>
-      </div>
-    </section>
-
-    <section class="section shell" id="emergencia">
-      <div class="section-heading">
-        <p class="kicker">Emergencia</p>
-        <h2>Contactos rápidos</h2>
-      </div>
-      <div class="emergency-grid">
-        <a class="em-card hot" href="tel:900973658"><img src="images/emergency.jpg" alt=""><div><strong>Prioritario</strong><span>900 973 658</span></div></a>
-        <a class="em-card" href="tel:106"><strong>SAMU</strong><span>106</span></a>
-        <a class="em-card" href="tel:105"><strong>Policía</strong><span>105</span></a>
-        <a class="em-card" href="tel:116"><strong>Bomberos</strong><span>116</span></a>
-      </div>
-      <div class="contacts-box">
-        <h3>2 contactos personales</h3>
-        <form id="contactsForm" class="contacts-form">
-          <label>1 <input name="n1" placeholder="Nombre" required> <input name="p1" type="tel" placeholder="Teléfono" required></label>
-          <label>2 <input name="n2" placeholder="Nombre" required> <input name="p2" type="tel" placeholder="Teléfono" required></label>
-          <button class="primary-btn" type="submit">Guardar en base de datos</button>
-        </form>
-        <div id="contactsList" class="contacts-list"></div>
-      </div>
-    </section>
-
-    <section class="section shell project">
-      <p class="kicker">Crea y Emprende 2026 · Colegio Rosas Pata</p>
-      <h2>Prototipo educativo con IA + base de datos</h2>
-      <p>Quinto A · Respuestas por API de IA · Historial en IndexedDB en este dispositivo.</p>
-    </section>
-  </main>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <div class="modal" id="modal" aria-hidden="true">
-    <div class="modal-backdrop" data-close></div>
-    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="modal-close" type="button" data-close aria-label="Cerrar">×</button>
-      <div id="modalContent"></div>
-    </div>
-  </div>
-
-  <script src="https://js.puter.com/v2/"></script>
-  <script src="app.js" defer></script>
+  <p>Abriendo Bot Medic… Si no redirige, entra a <a href="https://stormy-dune-65a3.here.now/">stormy-dune-65a3.here.now</a></p>
 </body>
 </html>
